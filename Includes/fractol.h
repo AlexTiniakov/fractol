@@ -44,6 +44,8 @@ typedef struct	s_fr
     int         maxIterations;
     int         h;
     int         w;
+	int				h2;
+	int 			w2;
     int         x;
     int         y;
     double      cRe;
