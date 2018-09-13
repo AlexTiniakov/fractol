@@ -19,18 +19,17 @@ int    mouse_scroll(int button,int x,int y,void *param)
     fr = (t_fr *)param;
     if (x >= 0 && y >= 0 && x <= fr->w && y <= fr->h && button == 4)
     {
-        fr->zoom += 0.2;
-        fr->moveX -= (1/fr->h) * (fr->h / 2 - x)/*1 / 100 * (fr->h / 2 - x)*/;
-        fr->moveY -= (1/fr->w) * (fr->w / 2 - y)/*1 / 100 * (fr->w / 2 - y)*/;
-        fr->maxIterations *= 1.21;
+        fr->zoom += (fr->zoom / 10);
+        fr->moveX -= (fr->w / 2 - x) / (fr->zoom * fr->w * 2);
+        fr->moveY -= (fr->h / 2 - y) / (fr->zoom * fr->h * 2);
     }
-    else if (x >= 0 && y >= 0 && x <= fr->w && y <= fr->h && button == 5)
+    else if (x >= 0 && y >= 0 && x <= fr->w && y <= fr->h && button == 5 && fr->zoom > 1)
     {
-        fr->moveX += fr->zoom > 1 ? (1/fr->h) * (fr->h / 2 - x)/*1 / 100 * (fr->h / 2 - x)*/ : 0;
-        fr->moveY += fr->zoom > 1 ? (1/fr->w) * (fr->w / 2 - y)/*1 / 100 * (fr->w / 2 - y)*/ : 0;
-        fr->zoom -= fr->zoom > 1 ? 0.2 : 0;
-        fr->maxIterations /= fr->maxIterations > 300 ? 1.21 : 1;
+        fr->moveX -= (fr->w / 2 - x) / (fr->zoom * fr->w * 2);
+        fr->moveY -= (fr->h / 2 - y) / (fr->zoom * fr->h * 2);
+        fr->zoom -= (fr->zoom / 10);
     }
+    //printf("%f, %f, %f\n", fr->moveX, fr->moveY, fr->zoom);
     fr->fractol(fr);
     return (0);
 }
@@ -40,6 +39,13 @@ void    ft_put_pixel(t_fr *fr, int color)
     fr->d[(fr->x * 4 + fr->sl * fr->y)] = (color % 255);
     fr->d[(fr->x * 4 + fr->sl * fr->y) + 1] = ((color / 256) % 255);
     fr->d[(fr->x * 4 + fr->sl * fr->y) + 2] = (color / 256 / 256);
+}
+
+void    ft_put_pixel1(int x, int y, t_fr *fr, int color)
+{
+    fr->d[(x * 4 + fr->sl * y)] = (color % 255);
+    fr->d[(x * 4 + fr->sl * y) + 1] = ((color / 256) % 255);
+    fr->d[(x * 4 + fr->sl * y) + 2] = (color / 256 / 256);
 }
 
 int     mouse_hook(int x, int y, void *param)
@@ -62,11 +68,31 @@ int		key_hook(int key, void *param)
 
 	fr = (t_fr *)param;
 	if (key == 53)
-		exit(_L);
+		exit(0);
     if (key == 49 && !fr->space)
         fr->space = 1;
-    else if (key == 49 && fr->space)
+    else if (key == 6 && fr->space)
         fr->space = 0;
+    if (key == 69)
+    {
+        fr->maxIterations += 1;
+        fr->fractol(fr);
+    }
+    else if (key == 78)
+    {
+        fr->maxIterations -= fr->maxIterations > 30 ? 1 : 0;
+        fr->fractol(fr);
+    }
+    if ((key >= 18 && key <= 20) || key == 15 || key == 5 || key == 11)
+    {
+        fr->col = key == 18 ? 0xFFFF00 : fr->col;
+        fr->col = key == 19 ? 0xFF00FF : fr->col;
+        fr->col = key == 20 ? 0x00FFFF : fr->col;
+        fr->col = key == 15 ? 0xFF0000 : fr->col;
+        fr->col = key == 5 ? 0x00FF00 : fr->col;
+        fr->col = key == 11 ? 0x0000FF : fr->col;
+        fr->fractol(fr);
+    }
 	return (0);
 }
 
@@ -91,7 +117,7 @@ void	ft_init_fr(int ac, char **av, t_fr *fr)
     fr->zoom = 1;
     fr->moveX = 0;
     fr->moveY = 0;
-    fr->maxIterations = 300;
+    fr->maxIterations = 30;
     fr->h = 800;
     fr->w = 1000;
 	fr->cRe = -0.7;
@@ -100,4 +126,5 @@ void	ft_init_fr(int ac, char **av, t_fr *fr)
     fr->bpp = 3;
     fr->sl = fr->w;
     fr->end = 1;
+    fr->col = 0xFFFFFF;
 }

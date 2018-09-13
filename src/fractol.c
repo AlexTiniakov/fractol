@@ -12,13 +12,21 @@
 
 #include <fractol.h>
 
+double	ft_abs(double x)
+{
+	if (x >= 0)
+		return (x);
+	else
+		return (0 - x);
+}
+
 int ft_get_colour(int i, int maxIterations)
 {
 	int colour;
 
 	if (!(maxIterations - i))
 		return (0);
-	colour = 0x0 + 0xFF & (0xFFFFFF / (maxIterations - i));
+	colour = 0x0 + (0xFFFFFF / (maxIterations - i));
 	return (colour);
 }
 
@@ -61,15 +69,29 @@ int	ft_Mandelbrot(t_fr *fr)
 int	ft_Julia(t_fr *fr)
 {
        //real and imaginary part of the constant c, determinate shape of the Julia Set
-  	double newRe, newIm, oldRe, oldIm;
+  	pthread_t t1;
+	pthread_t t2;
+	pthread_t t3;
+	pthread_t t4;
+	void *thread_data;
+	//double newRe, newIm, oldRe, oldIm;
 	int color;
+	thread_data = (void *)fr;
 	fr->y = -1;
 	int i;
 	//mlx_destroy_image(fr->mlx_ptr, fr->img_ptr);
 	mlx_clear_window(fr->mlx_ptr, fr->win_ptr);
 	fr->img_ptr = mlx_new_image(fr->mlx_ptr, fr->w, fr->h);
 	fr->d = mlx_get_data_addr(fr->img_ptr, &fr->bpp, &fr->sl, &fr->end);
-	while (++fr->y < fr->h)
+	pthread_create(&t1, NULL, threadFunc1, thread_data);
+	pthread_create(&t2, NULL, threadFunc2, thread_data);
+	pthread_create(&t3, NULL, threadFunc3, thread_data);
+	pthread_create(&t4, NULL, threadFunc4, thread_data);
+	pthread_join(t1, NULL);
+	pthread_join(t2, NULL);
+	pthread_join(t3, NULL);
+	pthread_join(t4, NULL);
+	/*while (++fr->y < fr->h)
 	{
 		fr->x = -1;
 		while (++fr->x < fr->w)
@@ -90,7 +112,7 @@ int	ft_Julia(t_fr *fr)
 			//mlx_pixel_put(fr->mlx_ptr, fr->win_ptr, fr->x, fr->y, color);
 			ft_put_pixel(fr, color);
 		}
-	}
+	}*/
 	mlx_put_image_to_window(fr->mlx_ptr, fr->win_ptr, fr->img_ptr, 0, 0);
 	return (0);
 }
@@ -116,7 +138,7 @@ int		main(int ac, char **av)
 	(fr.fractol = ft_get_fractol(*(++av)))(&fr);
 	mlx_mouse_hook(fr.win_ptr, mouse_scroll, (void *)&fr);
 	mlx_hook(fr.win_ptr, 6, 1L << 6, mouse_hook, (void *)&fr);
-	mlx_key_hook(fr.win_ptr, key_hook, (void *)&fr);
+	mlx_hook(fr.win_ptr, 2, 5, key_hook, (void *)&fr);
 	mlx_loop(fr.mlx_ptr);
 	return (0);
 }

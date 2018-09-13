@@ -20,6 +20,7 @@ MLX = -L /usr/local/lib/ -lmlx -framework OpenGL -framework AppKit
 
 SRC = src/fractol.c\
 		src/tools.c\
+		src/threadF.c\
 
 OBJ = $(SRC:.c=.o)
 
@@ -30,7 +31,7 @@ $(LIB):
 
 $(NAME): $(OBJ)
 	@gcc -o $(NAME) $(OBJ) $(LIB) $(MLX)
-	@echo "\033[1;92mfdf is created!\033[m"
+	@echo "\033[1;92mfractol is created!\033[m"
 
 $(OBJ): %.o: %.c
 	@gcc -c $(FLAGS) -o $@ -c $<

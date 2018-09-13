@@ -16,9 +16,17 @@
 # define _PTR fr->mlx_ptr, fr->win_ptr
 # include <mlx.h>
 # include <math.h>
+# include <pthread.h>
 # include "libft.h"
 
 typedef int 	(*t_f)();
+
+typedef struct  s_stack
+{
+    double          moveX;
+    double          moveY;
+    struct s_stack  *next;
+}                   t_stack;
 
 typedef struct	s_fr
 {
@@ -44,6 +52,7 @@ typedef struct	s_fr
     int         bpp;
     int         sl;
     int         end;
+    int      col;
     double pr;
     double pi;
 }				t_fr;
@@ -54,6 +63,13 @@ void			ft_init_fr(int ac, char **av, t_fr *fr);
 int		key_hook(int key, void *param);
 int     mouse_hook(int x,int y,void *param);
 void    ft_put_pixel(t_fr *fr, int color);
+void    ft_put_pixel1(int x, int y, t_fr *fr, int color);
 int    mouse_scroll(int button,int x,int y,void *param);
+void* threadFunc1(void* thread_data);
+void* threadFunc2(void* thread_data);
+void* threadFunc3(void* thread_data);
+void* threadFunc4(void* thread_data);
+int ft_get_colour(int i, int maxIterations);
+double	ft_abs(double x);
 
 #endif
