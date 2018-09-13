@@ -120,6 +120,8 @@ void	ft_init_fr(int ac, char **av, t_fr *fr)
     fr->maxIterations = 30;
     fr->h = 800;
     fr->w = 1000;
+	fr->h2 = 400;
+	fr->w2 = 500;
 	fr->cRe = -0.7;
   	fr->cIm = 0.27015;
     fr->d = NULL;
