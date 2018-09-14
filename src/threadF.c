@@ -14,10 +14,7 @@
 
 int ft_get_colour1(int i, int maxIterations, t_fr *fr)//try all like this one
 {
-	int colour;
-
-	colour = fr->col / i;
-	return (colour);
+	return (fr->col / (maxIterations - i));
 }
 
 int ft_get_colour2(int i, int maxIterations, t_fr *fr)
@@ -75,7 +72,7 @@ void* threadFunc1(void* thread_data)//optimize all like this one
       			newIm = 2 * oldRe * oldIm + fr->cIm;
 				if((newRe * newRe + newIm * newIm) > 4)
 				{
-					ft_put_pixel1(x, y, fr, ft_get_colour1(i, fr->maxIterations, fr));
+					ft_put_pixel1(x, y, fr, maxIterations / (maxIterations - i));//colour right there
 					break;
 				}
 			}
