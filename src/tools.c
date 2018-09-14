@@ -34,14 +34,14 @@ int    mouse_scroll(int button,int x,int y,void *param)
     return (0);
 }
 
-void    ft_put_pixel(t_fr *fr, int color)
+void    ft_put_pixel1(t_fr *fr, int color)
 {
-    fr->d[(fr->x * 4 + fr->sl * fr->y)] = (color % 255);
-    fr->d[(fr->x * 4 + fr->sl * fr->y) + 1] = ((color / 256) % 255);
-    fr->d[(fr->x * 4 + fr->sl * fr->y) + 2] = (color / 256 / 256);
+    fr->d[(fr->x * 4 + fr->sl * fr->y)] = (fr->col % 255) * color;
+    fr->d[(fr->x * 4 + fr->sl * fr->y) + 1] = ((fr->col / 256) % 255 * color);
+    fr->d[(fr->x * 4 + fr->sl * fr->y) + 2] = (fr->col / 256 / 256 * color);
 }
 
-void    ft_put_pixel1(int x, int y, t_fr *fr, int color)
+void    ft_put_pixel(int x, int y, t_fr *fr, int color)
 {
     fr->d[(x * 4 + fr->sl * y)] = (color % 255);
     fr->d[(x * 4 + fr->sl * y) + 1] = ((color / 256) % 255);
