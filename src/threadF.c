@@ -72,7 +72,7 @@ void* threadFunc1(void* thread_data)//optimize all like this one
       			newIm = 2 * oldRe * oldIm + fr->cIm;
 				if((newRe * newRe + newIm * newIm) > 4)
 				{
-					ft_put_pixel1(x, y, fr, maxIterations / (maxIterations - i));//colour right there
+					ft_put_pixel1(x, y, fr, i / maxIterations);//colour right there
 					break;
 				}
 			}
