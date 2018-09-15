@@ -56,5 +56,5 @@ screen(400, 300, 0, "Mandelbrot Set"); //make larger to see more detail!
 int main()
 {
 	long int a;
-	return(printf("%d\n", sizeof(a)));
+	return(printf("%lu\n", sizeof(a)));
 }
