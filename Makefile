@@ -12,7 +12,7 @@
 
 NAME = fractol
 
-FLAGS = -I includes/
+FLAGS = -Wall -Wextra -Werror -I includes/
 
 LIB = libft/libft.a
 
@@ -20,7 +20,9 @@ MLX = -L /usr/local/lib/ -lmlx -framework OpenGL -framework AppKit
 
 SRC = src/fractol.c\
 		src/tools.c\
-		src/threadF.c\
+		src/threadf.c\
+		src/ft_frs.c\
+		src/init.c\
 
 OBJ = $(SRC:.c=.o)
 
